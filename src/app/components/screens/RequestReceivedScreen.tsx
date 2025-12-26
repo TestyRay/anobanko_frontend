@@ -1,0 +1,40 @@
+import React from 'react';
+import { ScreenLayout } from '../ui/ScreenLayout';
+import { PrimaryButton } from '../ui/PrimaryButton';
+
+interface RequestReceivedScreenProps {
+  language: 'ru' | 'en';
+  onLanguageToggle: () => void;
+  requestId: string;
+  onGoToWebsite: () => void;
+}
+
+export function RequestReceivedScreen({ language, onLanguageToggle, requestId, onGoToWebsite }: RequestReceivedScreenProps) {
+  const content = {
+    ru: {
+      title: `✅ Отлично! Заявка №${requestId} уже обрабатывается`,
+      line2: 'Менеджер Анна получила ваш запрос и готовит расчет. Обычно это занимает 5–10 минут.',
+      line3: 'Пока ждете, можете посмотреть отзывы наших клиентов на сайте 👇',
+      button: '🌐 ПЕРЕЙТИ НА САЙТ',
+    },
+    en: {
+      title: `✅ Great! Request №${requestId} is being processed`,
+      line2: 'Manager Anna has received your request and is preparing the calculation. This usually takes 5–10 minutes.',
+      line3: 'While you wait, you can check our clients\' reviews on the website 👇',
+      button: '🌐 GO TO WEBSITE',
+    },
+  };
+
+  return (
+    <ScreenLayout showLogo showLanguageSwitch currentLanguage={language} onLanguageToggle={onLanguageToggle}>
+      <div className="flex flex-col gap-6 py-8 text-center">
+        <h2 className="text-gray-800 leading-relaxed">{content[language].title}</h2>
+        <p className="text-gray-700 leading-relaxed">{content[language].line2}</p>
+        <p className="text-gray-700 leading-relaxed">{content[language].line3}</p>
+        <div className="mt-8">
+          <PrimaryButton onClick={onGoToWebsite}>{content[language].button}</PrimaryButton>
+        </div>
+      </div>
+    </ScreenLayout>
+  );
+}
