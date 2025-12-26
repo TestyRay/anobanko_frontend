@@ -201,25 +201,6 @@ export default function App() {
       { label: '24 Reactivation 90', screen: 'post-reactivation-90' },
       { label: '25 Reactivation 180', screen: 'post-reactivation-180' },
     ];
-
-    return (
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-2 overflow-x-auto z-50 shadow-lg">
-        <div className="text-xs text-gray-400 mb-1 px-2">Screen Navigator:</div>
-        <div className="flex gap-2 text-xs pb-1">
-          {demoScreens.map((item) => (
-            <button
-              key={item.screen}
-              onClick={() => setCurrentScreen(item.screen)}
-              className={`px-3 py-1.5 rounded-[10px] whitespace-nowrap transition-colors ${
-                currentScreen === item.screen ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-      </div>
-    );
   };
 
   // Render current screen
@@ -358,7 +339,6 @@ export default function App() {
   return (
     <div className="relative pb-20">
       {renderScreen()}
-      {renderNavigationButtons()}
     </div>
   );
 }

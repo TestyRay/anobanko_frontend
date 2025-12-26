@@ -27,7 +27,7 @@ export function ScreenLayout({
                 <img
                     src="/logo.png"
                     alt="Anobanko"
-                    className="w-32 h-32 object-contain"
+                    className="w-32 object-contain"
                 />
             </div>
           ) : (
