@@ -25,10 +25,7 @@ export function HomeScreen({ language, onLanguageToggle, onStartTransfer }: Home
       <div className="flex flex-col items-center justify-between min-h-[600px]">
         <div className="flex-1 flex flex-col items-center justify-center gap-12">
             <img
-                src="/logo.png"
-                alt="Anobanko"
-                className="w-32 h-32 object-contain"
-            />
+                src="/logo.png" alt="Anobanko"className="w-32 h-32 object-contain"/>
           <p className="text-center text-gray-700 leading-relaxed px-4">{content[language].description}</p>
         </div>
         <div className="w-full max-w-sm pb-8">
