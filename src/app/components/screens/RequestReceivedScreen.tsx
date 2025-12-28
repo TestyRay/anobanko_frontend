@@ -16,15 +16,22 @@ export function RequestReceivedScreen({
   onGoToWebsite,
 }: RequestReceivedScreenProps) {
 
-  // 🔹 Отправка колбэка в Salebot при открытии последнего экрана
   useEffect(() => {
     const sendToSaleBot = async () => {
       try {
         const tg = (window as any).Telegram?.WebApp;
-        const userId = tg?.initDataUnsafe?.user?.id;
+        let userId = tg?.initDataUnsafe?.user?.id;
 
         if (!userId) {
-          console.error('Telegram user_id не найден');
+          const params = new URLSearchParams(window.location.search);
+          const userIdFromUrl = params.get('user_id');
+          if (userIdFromUrl) {
+            userId = Number(userIdFromUrl);
+          }
+        }
+
+        if (!userId) {
+          console.error('user_id не найден ни в Telegram, ни в URL');
           return;
         }
 
