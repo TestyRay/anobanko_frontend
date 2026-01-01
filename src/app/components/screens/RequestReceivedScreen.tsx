@@ -41,16 +41,13 @@ export function RequestReceivedScreen({
           payload.user_id = userId;
         }
 
-        const response = await fetch(
-          'https://chatter.salebot.pro/api/80ad1cd7a6abb881e200652404f0491d/tg_callback',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          }
-        );
+        const response = await fetch('/api/tg-callback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
 
         console.log(
           'tg_callback отправлен',
