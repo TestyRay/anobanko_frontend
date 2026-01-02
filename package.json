@@ -4,11 +4,14 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"vite\" \"node server/index.js\"",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node server/index.js",
+    "start": "NODE_ENV=production node server/index.js"
   },
   "dependencies": {
+    "express": "4.19.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "@emotion/react": "11.14.0",
@@ -68,6 +71,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
+    "concurrently": "9.1.2",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
   },
