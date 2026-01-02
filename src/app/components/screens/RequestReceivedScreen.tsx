@@ -20,14 +20,15 @@ export function RequestReceivedScreen({
       try {
         const tg = (window as any).Telegram?.WebApp;
 
-        const userId =
-          tg?.initDataUnsafe?.user?.id ??
-          Number(new URLSearchParams(window.location.search).get('user_id'));
+        if (!tg) {
+          console.warn('Telegram WebApp не инициализирован. Callback не отправлен.');
+          return;
+        }
+
+        const userId = tg.initDataUnsafe?.user?.id;
 
         if (!userId) {
-          console.warn(
-            'user_id не найден ни в Telegram WebApp, ни в URL. Отправляем callback без user_id'
-          );
+          console.warn('user_id отсутствует в Telegram WebApp');
         }
 
         const payload: Record<string, any> = {
@@ -35,30 +36,24 @@ export function RequestReceivedScreen({
           message: 'form_completed_callback',
           request_id: requestId,
           request_status: 'received',
+          user_id: userId,
         };
 
-        if (userId) {
-          payload.user_id = userId;
+        const response = await fetch('/api/tg-callback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
         }
 
-        const response = await fetch(
-          'https://chatter.salebot.pro/api/80ad1cd7a6abb881e200652404f0491d/tg_callback',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          }
-        );
-
-        console.log(
-          'tg_callback отправлен',
-          response.status,
-          payload
-        );
+        console.log('tg_callback успешно отправлен', payload);
       } catch (error) {
-        console.error('Ошибка отправки в Salebot:', error);
+        console.error('Ошибка отправки tg_callback:', error);
       }
     };
 
