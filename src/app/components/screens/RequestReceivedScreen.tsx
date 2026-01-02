@@ -16,49 +16,57 @@ export function RequestReceivedScreen({
   onGoToWebsite,
 }: RequestReceivedScreenProps) {
   useEffect(() => {
-    const sendToSaleBot = async () => {
-      try {
-        const tg = (window as any).Telegram?.WebApp;
+  const sendToSaleBot = async () => {
+    try {
+      const tg = (window as any).Telegram?.WebApp;
 
-        if (!tg) {
-          console.warn('Telegram WebApp не инициализирован. Callback не отправлен.');
-          return;
-        }
+      const userId =
+        tg?.initDataUnsafe?.user?.id ??
+        Number(new URLSearchParams(window.location.search).get('user_id'));
 
-        const userId = tg.initDataUnsafe?.user?.id;
+      const savedForm = localStorage.getItem('transfer_form');
+      const formData = savedForm ? JSON.parse(savedForm) : {};
 
-        if (!userId) {
-          console.warn('user_id отсутствует в Telegram WebApp');
-        }
+      const payload: Record<string, any> = {
+        group_id: 'AnobankoTransfer_Bot',
+        message: 'form_completed_callback',
+        request_id: requestId,
+        request_status: 'received',
 
-        const payload: Record<string, any> = {
-          group_id: 'AnobankoTransfer_Bot',
-          message: 'form_completed_callback',
-          request_id: requestId,
-          request_status: 'received',
-          user_id: userId,
-        };
+        language: formData.language,
+        from_country: formData.from_country,
+        from_currency: formData.from_currency,
+        sender_cash: formData.sender_cash,
+        sender_legal: formData.sender_legal,
+        to_country: formData.to_country,
+        to_currency: formData.to_currency,
+        recipient_cash: formData.recipient_cash,
+        recipient_legal: formData.recipient_legal,
+        amount_type: formData.amount_type,
+        amount: formData.amount,
+      };
 
-        const response = await fetch('/api/tg-callback', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
-        }
-
-        console.log('tg_callback успешно отправлен', payload);
-      } catch (error) {
-        console.error('Ошибка отправки tg_callback:', error);
+      if (userId) {
+        payload.user_id = userId;
       }
-    };
 
-    sendToSaleBot();
-  }, [requestId]);
+      const response = await fetch('/api/tg-callback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      console.log('tg_callback отправлен', response.status, payload);
+    } catch (error) {
+      console.error('Ошибка отправки в Salebot:', error);
+    }
+  };
+
+  sendToSaleBot();
+}, [requestId]);
+
 
   const content = {
     ru: {
