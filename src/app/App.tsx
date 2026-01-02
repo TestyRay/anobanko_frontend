@@ -280,6 +280,7 @@ export default function App() {
             language={language}
             onLanguageToggle={toggleLanguage}
             requestId={requestId}
+            transferData={transferData}
             onGoToWebsite={handleGoToWebsite}
           />
         );
